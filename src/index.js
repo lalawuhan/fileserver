@@ -60,7 +60,6 @@ function showTemplate(response) {
       extension: "js",
     },
   };
-
   let output;
   for (var key in dataObject) {
     output += template
@@ -71,7 +70,6 @@ function showTemplate(response) {
       .replace(/%%link%%/g, dataObject[key]["link"])
       .replace(/%%extension%%/g, dataObject[key]["extension"]);
   }
-
   return output;
 }
 
@@ -106,11 +104,12 @@ http
       if (!exist) {
         console.log("Does not exist:", pathname);
         // if the file is not found, return templated page
-        let output = showTemplate(response);
-        response.writeHead(200, {
+        response.writeHead(404, {
           "Content-Type": "text/html",
         });
+        let output = showTemplate(response);
         response.end(output);
+        return;
       }
 
       // if is a directory, then look for the linked index.html
@@ -120,12 +119,12 @@ http
       }
 
       fs.readFile(pathname, function (error, data) {
-        console.log("file", pathname);
+        console.log("file being served:", pathname);
         if (error) {
-          let output = showTemplate(response);
           response.writeHead(200, {
             "Content-Type": "text/html",
           });
+          let output = showTemplate(response);
           response.end(output);
         } else {
           // based on the pathname, find the extension name(pdf/jpg etc)
