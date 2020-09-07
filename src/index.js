@@ -102,7 +102,6 @@ http
 
     fs.exists(pathname, function (exist) {
       if (!exist) {
-        console.log("Does not exist:", pathname);
         // if the file is not found, return templated page
         response.writeHead(404, {
           "Content-Type": "text/html",
@@ -114,12 +113,10 @@ http
 
       // if is a directory, then look for the linked index.html
       if (fs.statSync(pathname).isDirectory()) {
-        console.log("pathname:", pathname);
         pathname += "/index.html";
       }
 
       fs.readFile(pathname, function (error, data) {
-        console.log("file being served:", pathname);
         if (error) {
           response.writeHead(200, {
             "Content-Type": "text/html",
@@ -139,7 +136,6 @@ http
               response.end(err);
             })
             .on("open", () => {
-              console.log("piping");
               readStream.pipe(response);
             });
         }
