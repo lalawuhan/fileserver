@@ -60,9 +60,14 @@ function showTemplate(response) {
       extension: "js",
     },
   };
-  let output;
-  for (var key in dataObject) {
-    output += template
+
+  let regex = /\%\%(.*?)\%\%/g;
+
+  let output = template.match(/<style>[\s\S]*?<\/style>/g)[0];
+  let div = template.match(/<div class="card">[\s\S]*?<\/div>/g)[0];
+  console.log("div", div);
+  for (let key in dataObject) {
+    output += div
       .replace(/%%id%%/g, dataObject[key]["id"])
       .replace(/%%name%%/g, dataObject[key]["name"])
       .replace(/%%city%%/g, dataObject[key]["city"])
@@ -70,6 +75,7 @@ function showTemplate(response) {
       .replace(/%%link%%/g, dataObject[key]["link"])
       .replace(/%%extension%%/g, dataObject[key]["extension"]);
   }
+
   return output;
 }
 
