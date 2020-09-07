@@ -72,10 +72,7 @@ function showTemplate(response) {
       .replace(/%%extension%%/g, dataObject[key]["extension"]);
   }
 
-  response.writeHead(200, {
-    "Content-Type": "text/html",
-  });
-  response.end(output);
+  return output;
 }
 
 const mimeType = {
@@ -109,8 +106,11 @@ http
       if (!exist) {
         console.log("Does not exist:", pathname);
         // if the file is not found, return templated page
-        showTemplate(response);
-        return;
+        let output = showTemplate(response);
+        response.writeHead(200, {
+          "Content-Type": "text/html",
+        });
+        response.end(output);
       }
 
       // if is a directory, then look for the linked index.html
@@ -122,7 +122,11 @@ http
       fs.readFile(pathname, function (error, data) {
         console.log("file", pathname);
         if (error) {
-          showTemplate(response);
+          let output = showTemplate(response);
+          response.writeHead(200, {
+            "Content-Type": "text/html",
+          });
+          response.end(output);
         } else {
           // based on the pathname, find the extension name(pdf/jpg etc)
           const extension = path.parse(pathname).ext;
