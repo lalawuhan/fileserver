@@ -125,11 +125,12 @@ http
           showTemplate(response);
         } else {
           // based on the pathname, find the extension name(pdf/jpg etc)
-          const extension = path.parse(pathname).extension;
+          const extension = path.parse(pathname).ext;
           response.setHeader(
             "Content-type",
             mimeType[extension] || "text/plain"
           );
+
           response.end(data);
         }
       });
