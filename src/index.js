@@ -130,8 +130,15 @@ http
             "Content-type",
             mimeType[extension] || "text/plain"
           );
-
-          response.end(data);
+          let readStream = fs.createReadStream(pathname);
+          readStream
+            .on("error", (err) => {
+              response.end(err);
+            })
+            .on("open", () => {
+              console.log("piping");
+              readStream.pipe(response);
+            });
         }
       });
     });
